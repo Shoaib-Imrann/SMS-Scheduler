@@ -25,7 +25,8 @@ function CreateCampaign() {
 
   const fetchShoppers = async (group) => {
     try {
-      const response = await axios.get(`http://localhost:4000/api/shopper/getShoppersGroup?group=${group}`, {
+      const response = await axios.get(`${backendUrl}/api/shopper/getShoppersGroup?group=${group}`,
+        {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
