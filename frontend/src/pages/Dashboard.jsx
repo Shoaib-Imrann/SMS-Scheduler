@@ -48,12 +48,22 @@ const Dashboard = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
+  if (!userData) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <p className="text-gray-700 text-lg">Loading your dashboard...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="flex min-h-screen bg-gray-50">
       {/* Sidebar - Desktop */}
       <div className="hidden md:flex flex-col w-64 bg-white border-gray-200">
-        <div className="flex items-center h-16 px-6"></div>
-
+        <div className="flex items-center h-16 px-6">
+        <h1 className="text-xl">MERCHANT</h1>
+        </div>
+         
         <div className="flex flex-col justify-between flex-grow">
           <nav className="flex-1 px-2 py-4 space-y-1">
             {navItems.map((item) => (
@@ -62,7 +72,7 @@ const Dashboard = () => {
                 to={item.to}
                 end={item.to === "/dashboard"}
                 className={({ isActive }) =>
-                  `flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
+                  `flex items-center px-4 py-3 text-xs lg:text-sm  font-medium rounded-lg transition-colors ${
                     isActive
                       ? "bg-blue-50 text-blue-700"
                       : "text-gray-700 hover:bg-gray-100"
@@ -125,7 +135,7 @@ const Dashboard = () => {
                   Funds:{" "}
                   <span className="font-medium">
                     {currency}
-                    {userData.creditBalance}
+                    {userData?.creditBalance || 0}
                   </span>
                 </span>
                 <button className="ml-4 text-white px-1.5 text-sm cursor-pointer border-l-[0.5px] border-white rounded-r-lg ">
@@ -137,7 +147,7 @@ const Dashboard = () => {
                   <p className="text-sm font-medium text-gray-800">
                     Hello,{" "}
                     <span className="font-semibold text-blue-600">
-                      {userData.name}
+                    {userData?.name || ""}
                     </span>
                     ! 👋
                   </p>
@@ -183,21 +193,21 @@ const Dashboard = () => {
                 </h2>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div className="p-4 bg-blue-100 rounded-lg">
-                    <p className="text-sm text-blue-700">Total Campaigns</p>
-                    <p className="text-2xl font-bold text-blue-900">
-                      {userData.campaigns}
+                    <p className="text-xs lg:text-sm text-blue-700">Total Campaigns</p>
+                    <p className="text-lg lg:text-2xl font-bold text-blue-900">
+                      {userData?.campaigns || 0}
                     </p>
                   </div>
                   <div className="p-4 bg-green-100 rounded-lg">
-                    <p className="text-sm text-green-700">Total Shoppers</p>
-                    <p className="text-2xl font-bold text-green-900">
-                      {userData.shoppers}
+                    <p className="text-xs lg:text-sm text-green-700">Total Shoppers</p>
+                    <p className="text-lg lg:text-2xl font-bold text-green-900">
+                      {userData?.shoppers || 0}
                     </p>
                   </div>
                   <div className="p-4 bg-indigo-100 rounded-lg">
-                    <p className="text-sm text-indigo-700">Messages Sent</p>
-                    <p className="text-2xl font-bold text-purple-900">
-                      {userData.messagesSent}
+                    <p className="text-xs lg:text-sm text-indigo-700">Messages Sent</p>
+                    <p className="text-lg lg:text-2xl font-bold text-purple-900">
+                      {userData?.messagesSent || 0}
                     </p>
                   </div>
                 </div>
@@ -212,10 +222,10 @@ const Dashboard = () => {
                     <div className="p-3 bg-indigo-50 rounded-full mb-4">
                       {item.icon}
                     </div>
-                    <h3 className="text-lg font-medium text-gray-800">
+                    <h3 className="text-sm lg:text-lg font-medium text-gray-800">
                       {item.text}
                     </h3>
-                    <p className="mt-2 text-sm text-gray-500 text-center">
+                    <p className="mt-2 text-xs lg:text-sm text-gray-500 text-center">
                       {item.text === "Create Campaign" &&
                         "Launch a new SMS marketing campaign"}
                       {item.text === "History" &&

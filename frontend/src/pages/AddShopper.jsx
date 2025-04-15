@@ -60,7 +60,7 @@ function AddShopper() {
         <h2 className="text-2xl font-bold mb-2 text-center text-gray-800">
           Add New Shopper
         </h2>
-        <p className="text-center text-sm text-gray-500 mb-5">
+        <p className="text-center text-xs md:text-sm text-gray-500 mb-5">
           This page is only for manually adding test data to verify SMS
           functionality.
         </p>

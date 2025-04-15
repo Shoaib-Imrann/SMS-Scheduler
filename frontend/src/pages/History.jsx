@@ -95,10 +95,11 @@ const CampaignList = () => {
   };
 
   return (
+    <div className="max-w-[25rem] md:max-w-[35rem] lg:max-w-6xl mx-auto">
     <div className="max-w-6xl mx-auto p-6">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-800">Campaign History</h1>
-        <p className="text-gray-500">
+        <h1 className="text-lg lg:text-2xl font-bold text-gray-800">Campaign History</h1>
+        <p className="text-gray-500 text-xs lg:text-md">
           View and manage your marketing campaigns
         </p>
       </div>
@@ -250,6 +251,7 @@ const CampaignList = () => {
           </div>
         )}
       </div>
+    </div>
     </div>
   );
 };
