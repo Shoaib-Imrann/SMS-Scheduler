@@ -1,6 +1,7 @@
 import Razorpay from "razorpay";
 import crypto from "crypto";
 import merchantModel from "../models/merchantModel.js";
+import paymentModel from "../models/paymentModel.js";
 
 // Initialize Razorpay
 const razorpay = new Razorpay({
@@ -54,7 +55,7 @@ export const verifyOrder = async (req, res) => {
       const addedCredits = amount ? amount / 100 : 0;
 
       if (!userId) {
-        console.error("❌ No user ID found");
+        console.error("No user ID found");
         return res
           .status(401)
           .json({ status: "failure", message: "Unauthorized user" });
@@ -66,6 +67,15 @@ export const verifyOrder = async (req, res) => {
         { $inc: { creditBalance: addedCredits } },
         { new: true }
       );
+
+      await paymentModel.create({
+        merchantId: userId,
+        razorpay_order_id,
+        razorpay_payment_id,
+        razorpay_signature,
+        amount: addedCredits, // Stored in rupees
+        status: "success",
+      });
 
       //   console.log('✅ Update successful:', updatedUser);
       return res.status(200).json({
@@ -80,7 +90,7 @@ export const verifyOrder = async (req, res) => {
         .json({ status: "failure", message: "Invalid signature" });
     }
   } catch (error) {
-    console.error("🔥 SERVER ERROR:", error);
+    console.error("SERVER ERROR:", error);
     return res.status(500).json({
       status: "failure",
       message: "Internal server error",

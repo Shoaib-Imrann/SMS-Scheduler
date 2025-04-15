@@ -59,7 +59,7 @@ function CreateCampaign() {
     const smsCost = totalSMS * 7.5;
   
     if (userData.creditBalance < smsCost) {
-      toast.error(`Insufficient credits!`);
+      toast.error(`Insufficient funds!`);
       setIsSubmitting(false);
       return;
     }
@@ -101,9 +101,9 @@ function CreateCampaign() {
   
         // If balance updated successfully, show success
         if (updateBalanceResponse.status === 200) {
-          toast.success('Credit balance updated!');
+          toast.success('funds updated!');
         } else {
-          toast.error('Failed to update credit balance.');
+          toast.error('Failed to update funds.');
         }
   
         setCampaignName("");
