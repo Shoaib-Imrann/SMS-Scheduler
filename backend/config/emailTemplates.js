@@ -4,7 +4,7 @@ export const RESET_TEMPLATE = `
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>datman Alert | Password Reset OTP</title>
+    <title>Alert | Password Reset OTP</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Arial:wght@300;400;700&display=swap');
     </style>
@@ -37,7 +37,7 @@ export const VERIFY_TEMPLATE = `
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>datman Alert | Verification OTP</title>
+    <title>Alert | Verification OTP</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Arial:wght@300;400;700&display=swap');
     </style>

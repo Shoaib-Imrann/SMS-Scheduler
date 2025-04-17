@@ -16,6 +16,7 @@ const shopperSchema = new mongoose.Schema({
   },
   lastTransactionDate: {
     type: Date,
+    required: true,
   },
   totalSpent: {
     type: Number,

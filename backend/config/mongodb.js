@@ -6,7 +6,7 @@ const connectDB = async () => {
         console.log("MongoDB Connected");
     })
 
-    await mongoose.connect(`${process.env.MONGODB_URI}datman`);
+    await mongoose.connect(`${process.env.MONGODB_URI}smsScheduler`);
 
 }
 
