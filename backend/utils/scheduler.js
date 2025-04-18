@@ -2,7 +2,9 @@
 import campaignModel from "../models/campaignModel.js";
 import merchantModel from "../models/merchantModel.js";
 import shopperModel from "../models/shopperModel.js";
-import { client } from "../config/twilio.js"; // adjust path if needed
+import twilio from "twilio";
+
+const client = twilio(process.env.TWILIO_SID, process.env.TWILIO_AUTH_TOKEN);
 
 export const sendScheduledCampaigns = async () => {
   const now = new Date();
