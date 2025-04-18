@@ -48,7 +48,7 @@ function AddShopper() {
       }
     } catch (err) {
       console.error("Error:", err);
-      toast.error("Something went wrong! Please try again.");
+      toast.error(err?.response?.data?.message || err.message || "Something went wrong! Please try again.");
     } finally {
       setLoading(false);
     }

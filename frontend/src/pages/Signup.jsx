@@ -114,8 +114,8 @@ function Signup() {
           loading: "Verifying email OTP...",
           success: (response) => {
             setEmailOtp("");
-            return response.data.message || "Email verified successfully!";
             navigate("/dashboard");
+            return response.data.message || "Email verified successfully!";
           },
           error: (error) =>
             error.response?.data?.message ||

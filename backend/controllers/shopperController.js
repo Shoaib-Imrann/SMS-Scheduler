@@ -10,11 +10,11 @@ export const register = async (req, res) => {
     const merchantId = req.userId;
     const { name, phoneNumber, lastTransactionDate, totalSpent } = req.body;
 
-    let existingShopper = await shopperModel.findOne({ phoneNumber });
+    let existingShopper = await shopperModel.findOne({ phoneNumber, merchantId });
     if (existingShopper) {
       return res.status(400).json({
         success: false,
-        message: "This shopper already exists",
+        message: "This shopper already exists for your account",
       });
     }
 
@@ -44,6 +44,7 @@ export const register = async (req, res) => {
     });
   }
 };
+
 
 export const getShoppersByGroup = async (req, res) => {
   const { group } = req.query;
