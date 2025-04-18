@@ -61,7 +61,7 @@ export const createCampaign = async (req, res) => {
 
       // Update campaign status to sent
       await campaignModel.findByIdAndUpdate(campaign._id, { status: "sent" });
-      //   console.log(`Campaign "${name}" executed and marked as sent`);
+
       await merchantModel.findByIdAndUpdate(merchantId, {
         $inc: {
           campaigns: 1,
@@ -70,7 +70,6 @@ export const createCampaign = async (req, res) => {
       });
     };
 
-    // Schedule if time is in future, else send now
     if (scheduledDate > now) {
       const cronTime = `${scheduledDate.getUTCMinutes()} ${scheduledDate.getUTCHours()} ${scheduledDate.getUTCDate()} ${
         scheduledDate.getUTCMonth() + 1
@@ -79,9 +78,8 @@ export const createCampaign = async (req, res) => {
       cron.schedule(cronTime, sendMessages, {
         timezone: "UTC", // or adjust to local like 'Asia/Kolkata'
       });
-
-      //   console.log(`📅 Campaign "${name}" scheduled for ${scheduledDate.toISOString()}`);
     } else {
+      // If time is in the past or now, send immediately
       await sendMessages();
     }
 
@@ -91,6 +89,7 @@ export const createCampaign = async (req, res) => {
     res.status(500).json({ error: "Failed to create campaign" });
   }
 };
+
 
 export const fetchCampaign = async (req, res) => {
   const merchantId = req.userId;

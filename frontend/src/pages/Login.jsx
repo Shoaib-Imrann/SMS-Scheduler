@@ -5,7 +5,6 @@ import { toast } from "react-hot-toast";
 import axios from "axios";
 import { Edit, Eye, EyeOff, ArrowLeft } from "lucide-react";
 import { AppContext } from "../Context/AppContext";
-// import { Ruluka_Logo } from "../assets/assets.js";
 
 function Login() {
   const { backendUrl, setIsLoggedIn, getUserData, userData, isLoggedIn } =
