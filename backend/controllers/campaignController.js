@@ -11,84 +11,77 @@ const client = twilio(process.env.TWILIO_SID, process.env.TWILIO_AUTH_TOKEN);
 export const createCampaign = async (req, res) => {
   const { name, message, scheduleTime, group } = req.body;
   const merchantId = req.userId;
-
   if (!merchantId) {
     return res.status(400).json({ error: "Merchant ID missing" });
   }
 
   const now = new Date();
-  const scheduledDate = new Date(scheduleTime);
+  const scheduledDate = new Date(scheduleTime); // parse direct
 
+  // Build shopper query
   let query = { merchantId };
-
   if (group === "last7days") {
-    query.lastTransactionDate = {
-      $gte: new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000),
-    };
+    query.lastTransactionDate = { $gte: new Date(now - 7*24*60*60*1000) };
   } else if (group === "last30days") {
-    query.lastTransactionDate = {
-      $gte: new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000),
-    };
+    query.lastTransactionDate = { $gte: new Date(now - 30*24*60*60*1000) };
   }
 
   try {
+    // Get recipients
     const shoppers = await shopperModel.find(query);
-    const phoneNumbers = shoppers.map((shopper) => shopper.phoneNumber);
-    const totalRecipients = phoneNumbers.length;
-    const totalCost = totalRecipients * 7.5;
+    const phoneNumbers = shoppers.map(s => s.phoneNumber);
 
-    const campaign = new campaignModel({
+    // Create campaign record
+    const campaign = await campaignModel.create({
       merchantId,
       name,
       message,
       scheduleTime: scheduledDate,
       group,
-      totalRecipients,
-      totalCost,
-      status: scheduledDate > now ? "scheduled" : "sent",
+      totalRecipients: phoneNumbers.length,
+      totalCost: phoneNumbers.length * 7.5,
+      status: "scheduled" // always start scheduled
     });
 
-    await campaign.save();
-
+    // Function to send & update
     const sendMessages = async () => {
-      for (const phone of phoneNumbers) {
+      for (const to of phoneNumbers) {
         await client.messages.create({
           body: message,
           from: process.env.TWILIO_PHONE_NUMBER,
-          to: phone,
+          to
         });
       }
-
-      // Update campaign status to sent
       await campaignModel.findByIdAndUpdate(campaign._id, { status: "sent" });
-
       await merchantModel.findByIdAndUpdate(merchantId, {
-        $inc: {
-          campaigns: 1,
-          messagesSent: phoneNumbers.length,
-        },
+        $inc: { campaigns: 1, messagesSent: phoneNumbers.length }
       });
     };
 
-    if (scheduledDate > now) {
-      const cronTime = `${scheduledDate.getUTCMinutes()} ${scheduledDate.getUTCHours()} ${scheduledDate.getUTCDate()} ${
-        scheduledDate.getUTCMonth() + 1
-      } *`;
-
-      cron.schedule(cronTime, sendMessages, {
-        timezone: "UTC", // or adjust to local like 'Asia/Kolkata'
-      });
-    } else {
-      // If time is in the past or now, send immediately
+    // Decide immediate vs scheduled
+    if (scheduledDate <= now) {
+      // IMMEDIATE
       await sendMessages();
+    } else {
+      // SCHEDULED (UTC)
+      const cronTime = [
+        scheduledDate.getUTCMinutes(),
+        scheduledDate.getUTCHours(),
+        scheduledDate.getUTCDate(),
+        scheduledDate.getUTCMonth() + 1,
+        "*"
+      ].join(" ");
+
+      // cron.schedule(cronTime, sendMessages, { timezone: "UTC" });
     }
 
-    res.status(201).json({ message: "Campaign scheduled successfully." });
+    return res.status(201).json({ message: "Campaign scheduled successfully." });
   } catch (err) {
     console.error("❌ Error launching campaign:", err);
-    res.status(500).json({ error: "Failed to create campaign" });
+    return res.status(500).json({ error: "Failed to create campaign" });
   }
 };
+
 
 
 export const fetchCampaign = async (req, res) => {

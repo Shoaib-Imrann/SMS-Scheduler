@@ -1,9 +1,9 @@
 // cron.js
-import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import { sendScheduledCampaigns } from './utils/scheduler.js';
-
+import dotenv from 'dotenv';
 dotenv.config();
+
 
 const run = async () => {
   try {

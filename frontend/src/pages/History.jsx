@@ -85,14 +85,20 @@ const CampaignList = () => {
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
+  
+    // Use UTC formatting to display the time exactly as saved
     return new Intl.DateTimeFormat("en-US", {
       month: "short",
       day: "numeric",
       year: "numeric",
       hour: "2-digit",
       minute: "2-digit",
+      hour12: true, // 12-hour format
+      timeZone: "UTC", // Ensure it's displayed in UTC
     }).format(date);
   };
+  
+  
 
   return (
     <div className="max-w-[25rem] md:max-w-[35rem] lg:max-w-6xl mx-auto">
