@@ -13,6 +13,8 @@ import {
   Filter,
   ChevronDown,
 } from "lucide-react";
+import axios from "axios";
+import { toast } from "react-hot-toast";
 
 const CampaignList = () => {
   const { backendUrl } = useContext(AppContext);
@@ -26,22 +28,22 @@ const CampaignList = () => {
     const fetchCampaigns = async () => {
       try {
         const authToken = localStorage.getItem("authToken");
-        const res = await fetch(`${backendUrl}/api/campaign/getcampaigns`, {
+  
+        const { data } = await axios.get(`${backendUrl}/api/campaign/getCampaigns`, {
           headers: {
-            "Content-Type": "application/json",
             Authorization: `Bearer ${authToken}`,
           },
         });
-
-        const data = await res.json();
+  
         setCampaigns(data);
         setLoading(false);
       } catch (err) {
         console.error("Error fetching campaigns:", err);
+        toast.error("Failed to fetch campaigns");
         setLoading(false);
       }
     };
-
+  
     fetchCampaigns();
   }, [backendUrl]);
 
