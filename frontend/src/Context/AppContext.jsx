@@ -14,9 +14,10 @@ export const AppContextProvider = (props) => {
   const currency = "₹";
 
   const getAuthState = async () => {
+    const token = localStorage.getItem("authToken");
     try {
       setGlobalLoading(true);
-      const token = localStorage.getItem("authToken");
+      
       if (!token) {
         setIsLoggedIn(false);
         return;
