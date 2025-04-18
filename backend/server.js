@@ -15,14 +15,22 @@ const app = express();
 const port = process.env.PORT || 4000;
 connectDB();
 
-const allowedOrigins = process.env.ALLOWED_ORIGINS
+const allowedOrigins = process.env.ALLOWED_ORIGINS.split(',');
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    // If there's no origin (for Postman, etc.), or if the origin is in the allowed list
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true); // Allow it
+    } else {
+      callback(new Error('Not allowed by CORS')); // Block it
+    }
+  },
+};
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors({
-  origin: allowedOrigins,
-  credentials: true,
-}));
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 
