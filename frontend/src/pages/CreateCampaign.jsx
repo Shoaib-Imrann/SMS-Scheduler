@@ -67,7 +67,7 @@ function CreateCampaign() {
   
     try {
       const authToken = localStorage.getItem('authToken');
-      console.log('Auth Token:', authToken);
+      // console.log('Auth Token:', authToken);
   
       const response = await axios.post(`${backendUrl}/api/campaign/launch`, {
         name: campaignName,
@@ -81,11 +81,11 @@ function CreateCampaign() {
       });
   
       // Log the response for debugging
-      console.log("Response from backend:", response);
+      // console.log("Response from backend:", response);
   
       if (response.status === 201) {
         // Successful response from backend
-        console.log("Campaign launched:", response.data);
+        // console.log("Campaign launched:", response.data);
         setShowSuccess(true);
         toast.success('Campaign scheduled successfully! 🎉');
   
