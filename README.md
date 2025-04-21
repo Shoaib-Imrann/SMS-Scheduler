@@ -3,7 +3,7 @@
 An automated SMS scheduling platform designed for restaurant merchants to send **bulk promotional messages** to their customers. Merchants can **create, schedule, and launch campaigns**, while being charged **per SMS**. 
 
 ## 🚀 Live Demo
-👉 [https://sms-scheduler-live.vercel.app](https://sms-scheduler-live.vercel.app)
+👉 [https://smsch.vercel.app](https://smsch.vercel.app)
 
 Test Instructions:
 1. Go to **"Add Shoppers"** and manually add 3 test shoppers with valid mobile numbers.
@@ -40,3 +40,7 @@ To simplify the process, **an international SMS route** is used, which bypasses 
 This project is for demo and testing purposes.<br>
 For production in India, DLT compliance and template approval will be required.<br> 
 International SMS may have additional cost implications.
+
+## 📡 Backend  <br>
+The backend runs on a serverless setup ideal for demos, but scheduled SMS needs a cron job, which adds cost — so full automation isn’t live.
+Want to test it fully? Deploy on Railway with a cron service, or just let me know and I’ll set it up
