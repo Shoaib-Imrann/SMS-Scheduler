@@ -1,10 +1,10 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import transporter from "../config/nodemailer.js";
 import merchantModel from "../models/merchantModel.js";
 import { VERIFY_TEMPLATE } from "../config/emailTemplates.js";
 import crypto from "crypto";
 import dotenv from "dotenv";
+import axios from 'axios';
 dotenv.config();
 
 export const checkLoginEmail = async (req, res) => {
@@ -65,7 +65,8 @@ export const login = async (req, res) => {
 export const sendEmailOtp = async (req, res) => {
   try {
     const { email } = req.body;
-    console.log(email);
+    // console.log(email);
+
     if (!email) {
       return res.json({ success: false, message: "Missing Details" });
     }
@@ -79,21 +80,38 @@ export const sendEmailOtp = async (req, res) => {
     }
 
     const otp = crypto.randomInt(100000, 1000000).toString();
-
     const hashedOtp = await bcrypt.hash(otp, 10);
 
     const otpToken = jwt.sign({ email, hashedOtp }, process.env.JWT_SECRET, {
       expiresIn: "10m",
     });
 
-    const mailOptions = {
-      from: `"Imran" <${process.env.SENDER_EMAIL}>`,
-      to: email,
+    const payload = {
+      sender: {
+        name: process.env.SENDER_NAME,
+        email: process.env.SENDER_EMAIL,
+      },
+      to: [
+        {
+          email: email,
+          name: email.split('@')[0],
+        },
+      ],
       subject: "Verification OTP",
-      html: VERIFY_TEMPLATE.replace("{{otp}}", otp),
+      htmlContent: VERIFY_TEMPLATE.replace("{{otp}}", otp),
     };
 
-    await transporter.sendMail(mailOptions);
+    const headers = {
+      accept: "application/json",
+      "api-key": process.env.BREVO_API_KEY,
+      "content-type": "application/json",
+    };
+
+    const response = await axios.post("https://api.brevo.com/v3/smtp/email", payload, { headers });
+
+    if (response.status !== 201) {
+      throw new Error("Failed to send OTP email");
+    }
 
     console.log("OTP sent to the email");
 
@@ -106,6 +124,7 @@ export const sendEmailOtp = async (req, res) => {
     return res.json({ success: false, message: error.message });
   }
 };
+
 
 export const verifyEmailOtp = async (req, res) => {
   const { email, otp, username, password } = req.body;
